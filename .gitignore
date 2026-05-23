@@ -1,0 +1,43 @@
+# ─── Node ────────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# ─── Ambiente ────────────────────────────────────────────────
+.env
+.env.local
+.env.production
+
+# ─── Build / dist ────────────────────────────────────────────
+dist/
+build/
+
+# ─── Logs ────────────────────────────────────────────────────
+logs/
+*.log
+
+# ─── Uploads (arquivos de usuários) ──────────────────────────
+backend/src/uploads/exams/*
+backend/src/uploads/avatars/*
+backend/src/uploads/reports/*
+!backend/src/uploads/**/.gitkeep
+
+# ─── Prisma / SQLite ─────────────────────────────────────────
+backend/src/prisma/migrations/
+*.db
+*.db-journal
+
+# ─── Claude / config local ───────────────────────────────────
+.claude/
+
+# ─── OS ──────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ─── IDE ─────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+
+# ─── Docker ──────────────────────────────────────────────────
+postgres_data/
