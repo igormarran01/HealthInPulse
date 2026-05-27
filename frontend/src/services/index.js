@@ -47,12 +47,13 @@ export const examService = {
   remove: (id)  => api.delete(`/exams/${id}`),
 };
 
-// ─── Triage ──────────────────────────────────────────────────
+// ─── Triage (motor adaptativo: start → answer → ... → result) ────
 export const triageService = {
-  getQuestions: ()     => api.get('/triage/questions'),
-  submit:       (data) => api.post('/triage', { answers: data }),
-  getHistory:   (p)    => api.get('/triage', { params: p }),
-  getOne:       (id)   => api.get(`/triage/${id}`),
+  getSchema:    ()                  => api.get('/triage/questions'),
+  start:        ()                  => api.post('/triage/start'),
+  answer:       (triageId, payload) => api.post(`/triage/${triageId}/answer`, payload),
+  getHistory:   (p)                 => api.get('/triage', { params: p }),
+  getOne:       (id)                => api.get(`/triage/${id}`),
 };
 
 // ─── AI Reports ──────────────────────────────────────────────

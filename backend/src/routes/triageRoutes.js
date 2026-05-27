@@ -1,17 +1,31 @@
-const { Router } = require('express');
+const { Router }    = require('express');
 const triageService  = require('../services/triageService');
 const patientService = require('../services/patientService');
 const { authenticate, authorize } = require('../middlewares/authMiddleware');
 
 // ─── Controller ──────────────────────────────────────────────
 
+// Schema da triagem adaptativa (perfil + condições conhecidas).
+// Mantém a rota antiga para o frontend antigo não quebrar.
 const getQuestions = (_req, res) => res.json(triageService.getQuestions());
 
-const submit = async (req, res, next) => {
+const start = async (req, res, next) => {
+  try {
+    const patient  = await patientService.getProfile(req.user.id);
+    const session  = await triageService.startTriage(patient.id);
+    res.status(201).json(session);
+  } catch (err) { next(err); }
+};
+
+const answer = async (req, res, next) => {
   try {
     const patient = await patientService.getProfile(req.user.id);
-    const triage  = await triageService.submitTriage(patient.id, req.body.answers);
-    res.status(202).json({ message: 'Triagem recebida e sendo analisada', triage });
+    const session = await triageService.answerTriage(
+      patient.id,
+      req.params.triageId,
+      req.body || {},
+    );
+    res.json(session);
   } catch (err) { next(err); }
 };
 
@@ -35,9 +49,10 @@ const router = Router();
 router.use(authenticate);
 router.use(authorize('PATIENT'));
 
-router.get('/questions',        getQuestions);
-router.get('/',                 history);
-router.get('/:triageId',        getOne);
-router.post('/', submit);
+router.get('/questions',          getQuestions);
+router.get('/',                   history);
+router.post('/start',             start);
+router.post('/:triageId/answer',  answer);
+router.get('/:triageId',          getOne);
 
 module.exports = router;
